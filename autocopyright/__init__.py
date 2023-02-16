@@ -24,11 +24,12 @@
 from __future__ import annotations
 
 import logging
+import operator
 import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from functools import lru_cache
+from functools import lru_cache, reduce
 from itertools import repeat
 from pathlib import Path
 from typing import Iterable, Optional
@@ -124,9 +125,10 @@ def main(  # pylint: disable=too-many-arguments
                     yield file_path
 
     with ThreadPoolExecutor(max_workers=pool) as executor:
-        executor.map(handle_file, _(), repeat(note))
+        return_values = executor.map(handle_file, _(), repeat(note))
 
-    return 1
+    had_changes = reduce(operator.or_, return_values)
+    raise SystemExit(had_changes)
 
 
 def configure_logging(verbose: int) -> None:
@@ -200,13 +202,11 @@ def pyproject() -> tomlkit.TOMLDocument:
 def handle_file(file_path: Path, note: str) -> int:
     """Check if file needs copyright update and apply it."""
     try:
-        _handle_file(file_path, note)
+        return _handle_file(file_path, note)
 
     except Exception as exc:
         logging.exception(exc)
         raise
-
-    return 0
 
 
 def _handle_file(file_path: Path, note: str) -> int:
@@ -243,7 +243,3 @@ def _handle_file(file_path: Path, note: str) -> int:
     logging.warning("Updated %r", file_path.as_posix())
 
     return 1
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())  # pylint: disable=no-value-for-parameter
