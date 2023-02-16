@@ -1,0 +1,7 @@
+- id: autocopyright
+  name: autocopyright
+  description: "Adds missing copyright headers to source files."
+  entry: autocopyright
+  args: [-i]
+  language: python
+  types: [python]
