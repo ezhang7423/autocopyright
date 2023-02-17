@@ -27,6 +27,7 @@ mypy = "^1.0.0"
 ptpython = "^3.0.22"
 typing-extensions = "^4.4.0"
 snakeviz = "^2.1.1"
+twine = "^4.0.2"
 
 [tool.poetry.scripts]
 autocopyright = "autocopyright.__main__:main"
