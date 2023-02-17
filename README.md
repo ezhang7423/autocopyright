@@ -46,3 +46,34 @@ details.
 You should have received a copy of the GNU Lesser General Public License
 along with {{ pyproject.tool.poetry["name"] }}. If not, see <http://www.gnu.org/licenses/>.
 ```
+
+## Pre-commit hook
+
+To add this script as pre commit hook, create `.pre-commit-config.yaml` file,
+or append to existing one, following lines:
+
+```yaml
+repos:
+  - repo: https://github.com/Argmaster/autocopyright
+    rev: "v1.0.0"
+    hooks:
+      - id: autocopyright
+        args:
+          [
+            -s,
+            "#",
+            -d,
+            <your-project-source-dir-name>,
+            -g,
+            "*.py",
+            -l,
+            <path-to-license-template>,
+          ]
+```
+
+Replace `<your-project-source-dir-name>` with valid name of your project source
+directory, for example `source` or `src`.
+
+Replace `<path-to-license-template>` with path to jinja2 template file
+containing license note, eg. `"./templates/LGPL3.md.jinja2"`. See **Templates**
+section for example of template content.
