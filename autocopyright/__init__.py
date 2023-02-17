@@ -69,16 +69,6 @@ except ImportError as __exc:
     "-g", "--glob", help="File glob used to search directories.", multiple=True
 )
 @click.option(
-    "-a",
-    "--author",
-    type=int,
-    help=(
-        "Index of author from authors list in pyproject.toml which should be used. "
-        + "By default its first one."
-    ),
-    default=0,
-)
-@click.option(
     "-l",
     "--license",
     "license_",
@@ -97,7 +87,6 @@ def main(  # pylint: disable=too-many-arguments
     comment_symbol: str,
     directory: list[Path],
     glob: list[str],
-    author: int,
     license_: Path,
     pool: int,
 ) -> int:  # pylint: enable=too-many-arguments
@@ -111,7 +100,7 @@ def main(  # pylint: disable=too-many-arguments
 
     license_ = license_.expanduser().resolve(strict=True)
 
-    note = render_note(comment_symbol, author, license_)
+    note = render_note(comment_symbol, license_)
     logging.debug("Rendered copyright note, %r characters.", len(note))
 
     def _() -> Iterable[Path]:
@@ -156,7 +145,7 @@ def configure_logging(verbose: int) -> None:
     logging.debug("Configured logger with level %r", verbose)
 
 
-def render_note(comment_symbol: str, author_index: int, license_: Path) -> str:
+def render_note(comment_symbol: str, license_: Path) -> str:
     """Render license note from template `LICENSE_NOTE.md.jinja2`."""
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(license_.parent.as_posix()),
@@ -165,25 +154,18 @@ def render_note(comment_symbol: str, author_index: int, license_: Path) -> str:
     template = env.get_template(license_.name)
     logging.debug("Loaded template object %r", license_)
 
-    package_name = pyproject().get("tool", {}).get("poetry", {}).get("name", "unknown")
-    repository = pyproject().get("tool", {}).get("poetry", {}).get("repository", "#")
-    author = (
-        pyproject().get("tool", {}).get("poetry", {}).get("authors", [])[author_index]
-    )
-    logging.info("Using %r license for %r", license_, author)
-
     render = template.render(
-        current_year=datetime.now().year,
-        author_name=author,
-        package_name=package_name,
-        repository=repository,
+        now=datetime.now(),
+        pyproject=pyproject(),
     )
 
     def _() -> Iterable[str]:
         for line in render.split("\n"):
             yield f"{comment_symbol} {line}".strip()
 
-    return str.join("\n", _())
+    render = str.join("\n", _())
+    logging.debug("Rendered template object %r", license_)
+    return render
 
 
 @lru_cache(1)
