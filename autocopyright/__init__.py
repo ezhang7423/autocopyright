@@ -26,6 +26,7 @@ from __future__ import annotations
 import logging
 import operator
 import os
+import re
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
@@ -72,6 +73,12 @@ __version__ = "1.0.0"
     "-g", "--glob", help="File glob used to search directories.", multiple=True
 )
 @click.option(
+    "-e",
+    "--exclude",
+    help="Regex used to exclude files from updates.",
+    multiple=True,
+)
+@click.option(
     "-l",
     "--license",
     "license_",
@@ -90,6 +97,7 @@ def main(  # pylint: disable=too-many-arguments
     comment_symbol: str,
     directory: list[Path],
     glob: list[str],
+    exclude: list[str],
     license_: Path,
     pool: int,
 ) -> int:  # pylint: enable=too-many-arguments
@@ -100,11 +108,26 @@ def main(  # pylint: disable=too-many-arguments
     globs to use at once.
     """
     configure_logging(verbose)
+    raise SystemExit(run(comment_symbol, directory, glob, exclude, license_, pool))
+
+
+def run(  # pylint: disable=too-many-arguments
+    comment_symbol: str,
+    directory: list[Path],
+    glob: list[str],
+    exclude: list[str],
+    license_: Path,
+    pool: int,
+) -> int:  # pylint: enable=too-many-arguments
+    """Run autocopyright from script."""
 
     license_ = license_.expanduser().resolve(strict=True)
 
     note = render_note(comment_symbol, license_)
     logging.debug("Rendered copyright note, %r characters.", len(note))
+
+    for ex in exclude:
+        logging.debug("Using exclude pattern: %r", ex)
 
     def _() -> Iterable[Path]:
         for dir_path in directory:
@@ -114,13 +137,45 @@ def main(  # pylint: disable=too-many-arguments
                 logging.debug("Walking %r", (dir_path / file_glob).as_posix())
 
                 for file_path in dir_path.rglob(file_glob):
+                    if is_excluded(
+                        file_path, eval_exclude(exclude, directory=dir_path)
+                    ):
+                        logging.info("Excluded %r", file_path.as_posix())
+                        continue
+
                     yield file_path
 
-    with ThreadPoolExecutor(max_workers=pool) as executor:
-        return_values = executor.map(handle_file, _(), repeat(note))
+    if pool > 1:
+        with ThreadPoolExecutor(max_workers=pool) as executor:
+            return_values = executor.map(handle_file, _(), repeat(note))
+    else:
+        return_values = map(handle_file, _(), repeat(note))
 
-    had_changes = reduce(operator.or_, return_values)
-    raise SystemExit(had_changes)
+    had_changes = reduce(operator.or_, return_values, 0)
+    return had_changes
+
+
+def eval_exclude(exclude: list[str], directory: Path) -> list[str]:
+    """Evaluate special variables in exclude globs."""
+
+    def _() -> Iterable[str]:
+        cwd = Path.cwd().as_posix()
+        directory_str = directory.as_posix()
+
+        for path in exclude:
+            yield path.format(cwd=cwd, directory=directory_str)
+
+    return list(_())
+
+
+def is_excluded(file_path: Path, exclude: list[str]) -> bool:
+    """Check if path matches any exclude glob."""
+
+    for exclude_glob in exclude:
+        if re.match(exclude_glob, file_path.as_posix()) is not None:
+            return True
+
+    return False
 
 
 def configure_logging(verbose: int) -> None:
