@@ -2,7 +2,7 @@
     "semi": true,
     "useTabs": false,
     "endOfLine": "lf",
-    "printWidth": 79,
+    "printWidth": 88,
     "overrides": [
         {
             "files": ["*.html", "*.js", "*.json", "*.prettierrc"],

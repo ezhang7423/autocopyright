@@ -1,13 +1,13 @@
 # autocopyright
 
-Autocopyright is a script which was designed to automatically add copyright
-notices at the top of source files. It uses jinja2 templates which can be
-automatically filled with values pulled from `pyproject.toml` and other files.
+Autocopyright is a script which was designed to automatically add copyright notices at
+the top of source files. It uses jinja2 templates which can be automatically filled with
+values pulled from `pyproject.toml` and other files.
 
 ## Example
 
-To run autocopyright you must specify comment sign, directory to traverse, glob
-patterns of files to modify and path to license template.
+To run autocopyright you must specify comment sign, directory to traverse, glob patterns
+of files to modify and path to license template.
 
 ```
 autocopyright -s "#" -d autocopyright -g "*.py" -g "*.pyi" -l "./templates/MIT.md.jinja2"
@@ -15,15 +15,15 @@ autocopyright -s "#" -d autocopyright -g "*.py" -g "*.pyi" -l "./templates/MIT.m
 
 ## Templates
 
-Autocopyright uses Jinja2 templates to determine content of copyright header.
-Such template is loaded from predefined destination and rendered with few
-special variables available. Those variables are listed below:
+Autocopyright uses Jinja2 templates to determine content of copyright header. Such
+template is loaded from predefined destination and rendered with few special variables
+available. Those variables are listed below:
 
-- `now` - `datetime.datetime` object holding current time (determined once, at
-  the beginning of script execution)
+- `now` - `datetime.datetime` object holding current time (determined once, at the
+  beginning of script execution)
 
-- `pyproject` - dictionary-like object holding loaded content of
-  `pyproject.toml` file loaded from current working directory of script.
+- `pyproject` - dictionary-like object holding loaded content of `pyproject.toml` file
+  loaded from current working directory of script.
 
 Template for **LGPL-3.0** license could look like this:
 
@@ -49,8 +49,8 @@ along with {{ pyproject.tool.poetry["name"] }}. If not, see <http://www.gnu.org/
 
 ## Pre-commit hook
 
-To add this script as pre commit hook, create `.pre-commit-config.yaml` file,
-or append to existing one, following lines:
+To add this script as pre commit hook, create `.pre-commit-config.yaml` file, or append
+to existing one, following lines:
 
 ```yaml
 repos:
@@ -74,6 +74,6 @@ repos:
 Replace `<your-project-source-dir-name>` with valid name of your project source
 directory, for example `source` or `src`.
 
-Replace `<path-to-license-template>` with path to jinja2 template file
-containing license note, eg. `"./templates/LGPL3.md.jinja2"`. See **Templates**
-section for example of template content.
+Replace `<path-to-license-template>` with path to jinja2 template file containing
+license note, eg. `"./templates/LGPL3.md.jinja2"`. See **Templates** section for example
+of template content.
