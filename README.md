@@ -12,3 +12,37 @@ patterns of files to modify and path to license template.
 ```
 autocopyright -s "#" -d autocopyright -g "*.py" -g "*.pyi" -l "./templates/MIT.md.jinja2"
 ```
+
+## Templates
+
+Autocopyright uses Jinja2 templates to determine content of copyright header.
+Such template is loaded from predefined destination and rendered with few
+special variables available. Those variables are listed below:
+
+- `now` - `datetime.datetime` object holding current time (determined once, at
+  the beginning of script execution)
+
+- `pyproject` - dictionary-like object holding loaded content of
+  `pyproject.toml` file loaded from current working directory of script.
+
+Template for **LGPL-3.0** license could look like this:
+
+```jinja
+Copyright {{ now.year }} {{ pyproject.tool.poetry.authors[0] }}
+
+This file is part of {{ pyproject.tool.poetry.name }}.
+{{ pyproject.tool.poetry.repository }}
+
+{{ pyproject.tool.poetry.name }} is free software: you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+{{ pyproject.tool.poetry.name }} is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with {{ pyproject.tool.poetry.name }}. If not, see <http://www.gnu.org/licenses/>.
+```
