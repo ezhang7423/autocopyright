@@ -5,3 +5,5 @@
   args: [-i]
   language: python
   types: [python]
+  always_run: true
+  pass_filenames: false
