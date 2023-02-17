@@ -6,7 +6,7 @@ repos:
         name: "autocopyright"
         types: [python]
         entry: |
-          autocopyright -s "#" -d autocopyright -g "*.py" -g "*.pyi" -l "./templates/MIT.md.jinja2"
+          autocopyright -s "#" -d autocopyright -d tests -g "*.py" -g "*.pyi" -l "./templates/MIT.md.jinja2"
         language: system
         pass_filenames: false
         verbose: true
