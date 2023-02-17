@@ -51,6 +51,9 @@ except ImportError as __exc:
     raise SystemExit(1) from __exc
 
 
+__version__ = "1.0.0"
+
+
 @click.command()
 @click.option(
     "-v",
