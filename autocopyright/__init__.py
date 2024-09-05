@@ -230,12 +230,16 @@ def render_note(comment_symbol: str, license_: Path) -> str:
 def pyproject() -> tomlkit.TOMLDocument:
     """Load `pyproject.toml` file content from current working directory."""
     pyproject_path = Path.cwd() / "pyproject.toml"
-    text_content = pyproject_path.read_text(encoding="utf-8")
-    content = tomlkit.loads(text_content)
+    try:
+        text_content = pyproject_path.read_text(encoding="utf-8")
+        content = tomlkit.loads(text_content)
+        logging.debug(
+            "Loaded %r chars from %r.", len(text_content), pyproject_path.as_posix()
+        )
+    except FileNotFoundError as exc:
+        logging.debug("Error reading pyproject.toml: %r", exc)
+        content = None
 
-    logging.debug(
-        "Loaded %r chars from %r.", len(text_content), pyproject_path.as_posix()
-    )
     return content
 
 
