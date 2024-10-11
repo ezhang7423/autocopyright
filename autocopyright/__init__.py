@@ -34,6 +34,7 @@ from functools import lru_cache, reduce
 from itertools import repeat
 from pathlib import Path
 from typing import Iterable, Optional
+import git
 
 SCRIPTS_DIR: Path = Path(__file__).parent
 
@@ -52,7 +53,7 @@ except ImportError as __exc:
     raise SystemExit(1) from __exc
 
 
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 
 @click.command()
@@ -132,13 +133,22 @@ def run(  # pylint: disable=too-many-arguments
     def _() -> Iterable[Path]:
         for dir_path in directory:
             dir_path = dir_path.resolve()
+            repo = None
+            try:
+                repo = git.Repo(dir_path, search_parent_directories=True)
+            except git.InvalidGitRepositoryError:
+                logging.warning("Directory %r is not a git repository.", dir_path)
+                continue
 
             for file_glob in glob:
                 logging.debug("Walking %r", (dir_path / file_glob).as_posix())
 
                 for file_path in dir_path.rglob(file_glob):
                     if is_excluded(
-                        license_, file_path, eval_exclude(exclude, directory=dir_path)
+                        repo,
+                        license_,
+                        file_path,
+                        eval_exclude(exclude, directory=dir_path),
                     ):
                         logging.info("Excluded %r", file_path.as_posix())
                         continue
@@ -168,8 +178,13 @@ def eval_exclude(exclude: list[str], directory: Path) -> list[str]:
     return list(_())
 
 
-def is_excluded(license_: Path, file_path: Path, exclude: list[str]) -> bool:
+def is_excluded(
+    repo: Optional[git.Repo], license_: Path, file_path: Path, exclude: list[str]
+) -> bool:
     """Check if path matches any exclude glob."""
+
+    if repo is not None and len(repo.ignored(file_path.as_posix())) > 0:
+        return True
 
     for exclude_glob in exclude:
         if re.match(exclude_glob, file_path.as_posix()) is not None:
