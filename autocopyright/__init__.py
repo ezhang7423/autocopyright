@@ -52,7 +52,7 @@ except ImportError as __exc:
     raise SystemExit(1) from __exc
 
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 
 @click.command()
