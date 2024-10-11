@@ -1,70 +1,68 @@
 [tool.poetry] # ANCHOR: tool.poetry
-name = "autocopyright"
-version = "1.2.0"
-description = "Script for adding copyright notes at the top of files."
 authors = ["Krzysztof Wiśniewski <argmaster.world@gmail.com>"]
-repository = "https://github.com/Argmaster/autocopyright"
+description = "Script for adding copyright notes at the top of files."
+name = "autocopyright"
 readme = "README.md"
+repository = "https://github.com/Argmaster/autocopyright"
+version = "1.2.1"
 
 [tool.poetry.dependencies] # ANCHOR: tool.poetry.dependencies
-python = "^3.9"
 click = "^8.1.3"
-jinja2 = "^3.1.2"
-tomlkit = "^0.11.6"
 jellyfish = ">=0.9,<1.2"
-
+jinja2 = "^3.1.2"
+python = "^3.9"
+tomlkit = "^0.11.6"
 
 [tool.poetry.group.dev.dependencies] # ANCHOR: tool.poetry.dev-dependencies
-black = "^23.1.0"
-pylint = "^2.16.2"
-isort = "^5.12.0"
-docformatter = "^1.5.1"
-pytest = ">=7.2.1,<9.0.0"
 autoflake = "^2.0.1"
-pre-commit = "^3.0.4"
-pytest-cov = "^4.0.0"
+black = "^23.1.0"
+docformatter = "^1.5.1"
+isort = "^5.12.0"
 mypy = "^1.0.0"
+pre-commit = "^3.0.4"
 ptpython = "^3.0.22"
-typing-extensions = "^4.4.0"
+pylint = "^2.16.2"
+pytest = ">=7.2.1,<9.0.0"
+pytest-cov = "^4.0.0"
 snakeviz = "^2.1.1"
 twine = "^4.0.2"
+typing-extensions = "^4.4.0"
 
 [tool.poetry.scripts]
 autocopyright = "autocopyright.__main__:main"
 
 [build-system]
-requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
 
 [tool.pytest.ini_options] # ANCHOR: tool.pytest
+addopts = """ -ra --strict-markers --doctest-modules --log-level=DEBUG --cov-report=term-missing:skip-covered"""
+filterwarnings = []
 minversion = "7.1.0"
 norecursedirs = ["external", "data"]
 python_files = ["test_*.py", "*_test.py"]
 testpaths = ["src/eldritch", "test"]
-addopts = """ -ra --strict-markers --doctest-modules --log-level=DEBUG --cov-report=term-missing:skip-covered"""
-filterwarnings = []
 
 [tool.isort] # ANCHOR: tool.isort
 # ---------------------------------------------------------------------------- #
 #         https://pycqa.github.io/isort/docs/configuration/options.html        #
 # ---------------------------------------------------------------------------- #
-profile = "black"
 known_first_party = "cssfinder"
+profile = "black"
 # src_paths = ["cssfinder", "tests"]
 line_length = 88
 
 [tool.black] # ANCHOR: tool.black
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-format
+extend-exclude = "(external)"
 line-length = 88
 target-version = ['py38']
-extend-exclude = "(external)"
 
 [tool.docformatter]
-recursive = true
-wrap-summaries = 88
-wrap-descriptions = 88
 blank = true
-
+recursive = true
+wrap-descriptions = 88
+wrap-summaries = 88
 
 [tool.mypy] # ANCHOR: tool.mypy
 # ---------------------------------------------------------------------------- #
@@ -357,12 +355,12 @@ variable-naming-style = "snake_case"
 # check-protected-access-in-special-methods =
 # List of method names used to declare (i.e. assign) instance attributes.
 defining-attr-methods = [
-    "__init__",
-    "__new__",
-    "setUp",
-    "__post_init__",
-    "_setup",
-    "setup_method",
+  "__init__",
+  "__new__",
+  "setUp",
+  "__post_init__",
+  "_setup",
+  "setup_method",
 ]
 # List of member names, which should be excluded from the protected access
 # warning.
@@ -459,11 +457,11 @@ logging-modules = ["logging"]
 # Only show warnings with the listed confidence levels. Leave empty to show all.
 # Valid levels: HIGH, CONTROL_FLOW, INFERENCE, INFERENCE_FAILURE, UNDEFINED.
 confidence = [
-    "HIGH",
-    "CONTROL_FLOW",
-    "INFERENCE",
-    "INFERENCE_FAILURE",
-    "UNDEFINED",
+  "HIGH",
+  "CONTROL_FLOW",
+  "INFERENCE",
+  "INFERENCE_FAILURE",
+  "UNDEFINED",
 ]
 # Disable the message, report, category or checker with the given id(s). You can
 # either give multiple identifiers separated by comma (,) or put this option
@@ -475,14 +473,14 @@ confidence = [
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 disable = [
-    "raw-checker-failed",
-    "bad-inline-option",
-    "locally-disabled",
-    "file-ignored",
-    "suppressed-message",
-    "useless-suppression",
-    "deprecated-pragma",
-    "use-symbolic-message-instead",
+  "raw-checker-failed",
+  "bad-inline-option",
+  "locally-disabled",
+  "file-ignored",
+  "suppressed-message",
+  "useless-suppression",
+  "deprecated-pragma",
+  "use-symbolic-message-instead",
 ]
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -583,20 +581,20 @@ ignore-none = true
 ignore-on-opaque-inference = true
 # List of symbolic message names to ignore for Mixin members.
 ignored-checks-for-mixins = [
-    "no-member",
-    "not-async-context-manager",
-    "not-context-manager",
-    "attribute-defined-outside-init",
+  "no-member",
+  "not-async-context-manager",
+  "not-context-manager",
+  "attribute-defined-outside-init",
 ]
 # List of class names for which member attributes should not be checked (useful
 # for classes with dynamically set attributes). This supports the use of
 # qualified names.
 ignored-classes = [
-    "optparse.Values",
-    "thread._local",
-    "_thread._local",
-    "argparse.Namespace",
-    "_HookRelay",
+  "optparse.Values",
+  "thread._local",
+  "_thread._local",
+  "argparse.Namespace",
+  "_HookRelay",
 ]
 # Show a hint with possible names when a member name was not found. The aspect of
 # finding the hint is based on edit distance.
@@ -634,9 +632,9 @@ ignored-argument-names = "_.*|^ignored_|^unused_"
 # List of qualified module names which can have objects that can redefine
 # builtins.
 redefining-builtins-modules = [
-    "six.moves",
-    "past.builtins",
-    "future.builtins",
-    "builtins",
-    "io",
+  "six.moves",
+  "past.builtins",
+  "future.builtins",
+  "builtins",
+  "io",
 ]

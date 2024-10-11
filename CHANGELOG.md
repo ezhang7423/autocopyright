@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and
 this project adheres to [Calendar Versioning](https://calver.org/).
 
+
+## \[1.2.1\] - 2024-10-11
+
+  Exclude .git folder and copyright license if present in source directory.
+
+
 ## \[1.2.0\] - 2024-10-11
 
 - Bumped version to work without pyproject.toml file in repo.

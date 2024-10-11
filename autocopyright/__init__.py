@@ -52,7 +52,7 @@ except ImportError as __exc:
     raise SystemExit(1) from __exc
 
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 
 @click.command()
@@ -138,7 +138,7 @@ def run(  # pylint: disable=too-many-arguments
 
                 for file_path in dir_path.rglob(file_glob):
                     if is_excluded(
-                        file_path, eval_exclude(exclude, directory=dir_path)
+                        license_, file_path, eval_exclude(exclude, directory=dir_path)
                     ):
                         logging.info("Excluded %r", file_path.as_posix())
                         continue
@@ -168,12 +168,19 @@ def eval_exclude(exclude: list[str], directory: Path) -> list[str]:
     return list(_())
 
 
-def is_excluded(file_path: Path, exclude: list[str]) -> bool:
+def is_excluded(license_: Path, file_path: Path, exclude: list[str]) -> bool:
     """Check if path matches any exclude glob."""
 
     for exclude_glob in exclude:
         if re.match(exclude_glob, file_path.as_posix()) is not None:
             return True
+
+    # exclude .git
+    if ".git" in file_path.parts:
+        return True
+
+    if file_path == license_:
+        return True
 
     return False
 
@@ -255,6 +262,7 @@ def handle_file(file_path: Path, note: str) -> int:
 
 def _handle_file(file_path: Path, note: str) -> int:
     note_size = len(note)
+    logging.debug(f"Note: {note}")
     content = file_path.read_text(encoding="utf-8")
     logging.debug("Inspecting file %r", file_path.as_posix())
 
