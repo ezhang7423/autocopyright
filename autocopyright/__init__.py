@@ -270,7 +270,7 @@ def handle_file(file_path: Path, note: str) -> int:
     try:
         return _handle_file(file_path, note)
     except IsADirectoryError:
-        pass
+        return 0
     except Exception as exc:
         logging.exception(exc)
         raise
