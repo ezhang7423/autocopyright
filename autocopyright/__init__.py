@@ -53,7 +53,7 @@ except ImportError as __exc:
     raise SystemExit(1) from __exc
 
 
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 
 
 @click.command()
@@ -269,7 +269,8 @@ def handle_file(file_path: Path, note: str) -> int:
     """Check if file needs copyright update and apply it."""
     try:
         return _handle_file(file_path, note)
-
+    except IsADirectoryError:
+        pass
     except Exception as exc:
         logging.exception(exc)
         raise

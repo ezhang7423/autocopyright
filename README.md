@@ -55,7 +55,7 @@ to existing one, following lines:
 ```yaml
 repos:
   - repo: https://github.com/Argmaster/autocopyright
-    rev: "v1.2.2"
+    rev: "v1.2.3"
     hooks:
       - id: autocopyright
         args:
