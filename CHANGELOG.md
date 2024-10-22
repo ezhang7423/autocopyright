@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Calendar Versioning](https://calver.org/).
 
 
+## \[1.2.4\] - 2024-10-11
+
+  Exit code reduce bug fix
+
 ## \[1.2.3\] - 2024-10-11
 
   Handle IsADirectoryError exception when handle_file is called on directory.
