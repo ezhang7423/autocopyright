@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Calendar Versioning](https://calver.org/).
 
 
+## \[1.2.5\] - 2024-10-12
+
+  Ignore non-text files when processing files.
+
+
 ## \[1.2.4\] - 2024-10-11
 
   Exit code reduce bug fix

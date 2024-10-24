@@ -38,6 +38,155 @@ import git
 
 SCRIPTS_DIR: Path = Path(__file__).parent
 
+# Binaries
+binary_extensions = [
+    ".exe",  # Executable file (Windows)
+    ".bin",  # Binary file
+    ".dll",  # Dynamic Link Library (Windows)
+    ".so",  # Shared Object Library (Linux)
+    ".o",  # Compiled Object File
+    ".a",  # Static Library Archive (Unix)
+    ".pyc",  # Compiled Python Bytecode
+    ".pyo",  # Optimized Python Bytecode
+    ".iso",  # Disk Image
+    ".img",  # Disk Image File
+    ".dmg",  # Apple Disk Image
+    ".elf",  # Executable and Linkable Format (Linux)
+    ".class",  # Compiled Java Bytecode
+    ".msi",  # Microsoft Installer Package
+    ".jar",  # Java Archive
+    ".deb",  # Debian Package File
+    ".rpm",  # Red Hat Package Manager File
+    ".apk",  # Android Package File
+]
+
+# Images
+image_extensions = [
+    ".bmp",  # Bitmap Image File
+    ".dib",  # Device-Independent Bitmap
+    ".jpg",  # Joint Photographic Experts Group
+    ".jpeg",  # Joint Photographic Experts Group
+    ".jfif",  # JPEG File Interchange Format
+    ".jp2",  # JPEG 2000
+    ".png",  # Portable Network Graphics
+    ".svg",  # Scalable Vector Graphics
+    ".gif",  # Graphics Interchange Format
+    ".tiff",  # Tagged Image File Format
+    ".webp",  # WebP Image
+    ".ico",  # Icon Image
+    ".psd",  # Adobe Photoshop Document
+    ".heic",  # High Efficiency Image Format
+    ".heif",  # High Efficiency Image Format
+    ".raw",  # Raw Image File
+    ".cr2",  # Canon Raw Image File
+    ".nef",  # Nikon Raw Image File
+    ".arw",  # Sony Alpha Raw Image File
+    ".dds",  # DirectDraw Surface
+]
+
+# Videos
+video_extensions = [
+    ".mp4",  # MPEG-4 Video File
+    ".mkv",  # Matroska Video File
+    ".avi",  # Audio Video Interleave
+    ".mov",  # Apple QuickTime Movie
+    ".wmv",  # Windows Media Video
+    ".flv",  # Flash Video
+    ".webm",  # WebM Video
+    ".m4v",  # MPEG-4 Video
+    ".mpg",  # MPEG Video
+    ".mpeg",  # MPEG Video
+    ".ts",  # Transport Stream
+    ".3gp",  # 3GPP Multimedia File
+    ".mxf",  # Material Exchange Format
+    ".rm",  # RealMedia File
+    ".ogv",  # Ogg Video File
+    ".vob",  # Video Object File (DVD)
+    ".dv",  # Digital Video File
+    ".f4v",  # Flash MP4 Video
+    ".asf",  # Advanced Systems Format
+]
+
+# Audio
+audio_extensions = [
+    ".mp3",  # MPEG Audio Layer III
+    ".wav",  # Waveform Audio File
+    ".flac",  # Free Lossless Audio Codec
+    ".aac",  # Advanced Audio Coding
+    ".ogg",  # Ogg Vorbis Audio
+    ".wma",  # Windows Media Audio
+    ".m4a",  # MPEG-4 Audio
+    ".alac",  # Apple Lossless Audio Codec
+    ".aiff",  # Audio Interchange File Format
+    ".pcm",  # Pulse Code Modulation
+    ".amr",  # Adaptive Multi-Rate Audio
+    ".opus",  # Opus Audio Codec
+]
+
+# Archives & Compressed Files
+archive_extensions = [
+    ".zip",  # ZIP Archive
+    ".rar",  # RAR Archive
+    ".7z",  # 7-Zip Archive
+    ".tar",  # Tarball Archive
+    ".gz",  # Gzip Compressed File
+    ".bz2",  # Bzip2 Compressed File
+    ".xz",  # XZ Compressed File
+    ".lz",  # Lzip Compressed File
+    ".iso",  # ISO Disk Image (also binary)
+    ".tgz",  # Gzipped Tar Archive
+]
+
+# Fonts
+font_extensions = [
+    ".ttf",  # TrueType Font
+    ".otf",  # OpenType Font
+    ".woff",  # Web Open Font Format
+    ".woff2",  # Web Open Font Format 2
+    ".eot",  # Embedded OpenType Font
+    ".pfb",  # Printer Font Binary
+    ".pfa",  # Printer Font ASCII
+]
+
+# Documents (Non-Plain Text)
+document_extensions = [
+    ".pdf",  # Portable Document Format
+    ".doc",  # Microsoft Word Document
+    ".docx",  # Microsoft Word Open XML Document
+    ".xls",  # Microsoft Excel Spreadsheet
+    ".xlsx",  # Microsoft Excel Open XML Spreadsheet
+    ".ppt",  # Microsoft PowerPoint Presentation
+    ".pptx",  # Microsoft PowerPoint Open XML Presentation
+    ".odt",  # OpenDocument Text
+    ".ods",  # OpenDocument Spreadsheet
+    ".odp",  # OpenDocument Presentation
+    ".rtf",  # Rich Text Format
+]
+
+# 3D Models and CAD Files
+model_extensions = [
+    ".obj",  # Wavefront OBJ File
+    ".stl",  # Stereolithography File
+    ".fbx",  # Autodesk FBX File
+    ".dae",  # Digital Asset Exchange
+    ".glb",  # GL Transmission Format Binary
+    ".gltf",  # GL Transmission Format
+    ".3ds",  # 3D Studio File
+    ".dwg",  # AutoCAD Drawing Database File
+    ".dxf",  # Drawing Exchange Format File
+]
+
+# Others (Non-Text)
+misc_extensions = [
+    ".dat",  # Generic Data File
+    ".db",  # Database File
+    ".bak",  # Backup File
+    ".log",  # Log File (Can be text-based or binary)
+    ".msg",  # Outlook Mail Message
+    ".torrent",  # BitTorrent File
+]
+
+all_extensions = binary_extensions + image_extensions + video_extensions + audio_extensions + archive_extensions + font_extensions + document_extensions + model_extensions + misc_extensions
 
 try:
     import click
@@ -53,7 +202,7 @@ except ImportError as __exc:
     raise SystemExit(1) from __exc
 
 
-__version__ = "1.2.4"
+__version__ = "1.2.5"
 
 
 @click.command()
@@ -268,6 +417,9 @@ def pyproject() -> tomlkit.TOMLDocument:
 def handle_file(file_path: Path, note: str) -> int:
     """Check if file needs copyright update and apply it."""
     try:
+        # if file is binary or image or video, skip it
+        if file_path.suffix in all_extensions:
+            return 0
         return _handle_file(file_path, note)
     except IsADirectoryError:
         return 0
