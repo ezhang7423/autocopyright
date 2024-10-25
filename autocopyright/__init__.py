@@ -186,7 +186,18 @@ misc_extensions = [
     ".torrent",  # BitTorrent File
 ]
 
-all_extensions = binary_extensions + image_extensions + video_extensions + audio_extensions + archive_extensions + font_extensions + document_extensions + model_extensions + misc_extensions
+all_extensions = (
+    binary_extensions
+    + image_extensions
+    + video_extensions
+    + audio_extensions
+    + archive_extensions
+    + font_extensions
+    + document_extensions
+    + model_extensions
+    + misc_extensions
+    + [".json"]
+)
 
 try:
     import click
@@ -202,7 +213,7 @@ except ImportError as __exc:
     raise SystemExit(1) from __exc
 
 
-__version__ = "1.2.5"
+__version__ = "1.2.6"
 
 
 @click.command()

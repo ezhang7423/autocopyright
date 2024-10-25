@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 this project adheres to [Calendar Versioning](https://calver.org/).
 
 
+## \[1.2.6\] - 2024-10-24
+
+  Add .json to the list of ignored files.
+
+
 ## \[1.2.5\] - 2024-10-12
 
   Ignore non-text files when processing files.
